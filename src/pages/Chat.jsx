@@ -72,6 +72,7 @@ const Container = styled.main`
       display: flex;
       border-bottom: 1px solid #8353E9;
       margin-top: 2rem;
+      padding-bottom: 0.5rem;
 
       input {
         width: 100%;
@@ -82,8 +83,6 @@ const Container = styled.main`
           color: #C2C2C2;
         }
       }
-
-      
 
       button {
         background: none;
