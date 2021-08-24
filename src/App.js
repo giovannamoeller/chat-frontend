@@ -6,15 +6,22 @@ import {
   Switch, 
   Route
 } from "react-router-dom";
+import { UserContext } from './hooks/UserContext';
+import { useState } from 'react';
 
 function App() {
-  return (
+
+  const [user, setUser] = useState('');
+
+  return (  
     <>
       <GlobalStyle/>
       <Router>
         <Switch>
-          <Route path="/" exact component={LoginPage}/>
-          <Route path="/chat" component={Chat}/>
+          <UserContext.Provider value={{ user, setUser }}>
+            <Route path="/" exact component={LoginPage}/>
+            <Route path="/chat" component={Chat}/>
+          </UserContext.Provider>
         </Switch>
       </Router>
     </>

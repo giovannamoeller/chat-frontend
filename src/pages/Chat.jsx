@@ -1,5 +1,7 @@
+import { useContext } from 'react';
 import styled from 'styled-components';
 import { Button } from '../components/Button';
+import { UserContext } from '../hooks/UserContext';
 
 
 const Container = styled.main`
@@ -47,20 +49,16 @@ const Form = styled.form`
   }
 `;
 
-function handleFormSubmit() {
 
-}
+export function Chat() {
 
-export function LoginPage() {
+  const { user } = useContext(UserContext);
+  console.log(user);
+
   return (
+
     <Container>
-      <section>
-        <Form action="" onSubmit={handleFormSubmit}>
-          <h1>Informe seu usuário</h1>
-          <input type="text" name="username" placeholder="usuario"/>
-          <Button type="submit">Entrar</Button>
-        </Form>
-      </section>
+      oi chat
     </Container>
   )
 }

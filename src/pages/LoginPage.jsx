@@ -1,6 +1,8 @@
-import { useState } from 'react';
+import { useState, createContext, useContext } from 'react';
 import styled from 'styled-components';
 import { Button } from '../components/Button';
+import { useHistory } from 'react-router-dom';
+import { UserContext } from '../hooks/UserContext';
 
 
 const Container = styled.main`
@@ -49,10 +51,15 @@ const Form = styled.form`
 `;
 
 export function LoginPage() {
-  const [username, setUsername] = useState('');
 
-  function handleFormSubmit() {
-    console.log(username);
+  const { user, setUser } = useContext(UserContext);
+  
+  const history = useHistory();
+  
+  function handleFormSubmit(e) {
+    e.preventDefault();
+    console.log(user);
+    history.push('/chat');
   }
 
   return (
@@ -60,7 +67,7 @@ export function LoginPage() {
       <section>
         <Form action="" onSubmit={handleFormSubmit}>
           <h1>Informe seu usuário</h1>
-          <input type="text" name="username" placeholder="usuario" onChange={(e) => setUsername(e.target.value)}/>
+          <input type="text" name="username" placeholder="usuario" onChange={(e) => setUser(e.target.value)}/>
           <Button type="submit">Entrar</Button>
         </Form>
       </section>
