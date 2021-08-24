@@ -2,6 +2,7 @@ import { useContext, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import styled from 'styled-components';
 import { UserContext } from '../hooks/UserContext';
+import SendMessageIcon from '../assets/send-message.svg';
 
 const Container = styled.main`
 
@@ -53,17 +54,45 @@ const Container = styled.main`
 
   section {
     display: flex;
+    flex-direction: column;
     height: 100%;
     width: 82%;
-
     align-items: center;
-    justify-content: center;
 
     .messages {
       background: #efe9fa;
       width: 90%;
-      height: 90%;
+      height: 80%;
+      margin-top: 3rem;
       border-radius: 8px;
+    }
+
+    form {
+      width: 90%;
+      display: flex;
+      border-bottom: 1px solid #8353E9;
+      margin-top: 2rem;
+
+      input {
+        width: 100%;
+        outline: none;
+        color: #797979;
+
+        &::placeholder {
+          color: #C2C2C2;
+        }
+      }
+
+      
+
+      button {
+        background: none;
+        cursor: pointer;
+
+        img {
+          width: 1.8rem;
+        }
+      }
     }
 
   }
@@ -97,6 +126,13 @@ export function Chat() {
 
       <section>
         <div className="messages"></div>
+
+        <form action="">
+          <input type="text" name="message" placeholder="Digite aqui sua mensagem" />
+          <button type="submit">
+            <img src={SendMessageIcon} alt="Send Message" />
+          </button>
+        </form>
       </section>
     </Container>
   )
