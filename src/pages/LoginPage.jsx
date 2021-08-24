@@ -1,4 +1,4 @@
-import { useState, createContext, useContext } from 'react';
+import { useContext } from 'react';
 import styled from 'styled-components';
 import { Button } from '../components/Button';
 import { useHistory } from 'react-router-dom';

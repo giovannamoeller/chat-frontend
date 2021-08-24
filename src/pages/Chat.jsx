@@ -1,16 +1,54 @@
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import styled from 'styled-components';
-import { Button } from '../components/Button';
 import { UserContext } from '../hooks/UserContext';
-
 
 const Container = styled.main`
 
-  background: #8353E9;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   min-height: 100vh;
+
+  aside {
+    background: #8353E9;
+    position: absolute;
+    right: 0;
+    height: 100vh;
+    padding: 4rem;
+    color: #FFF;
+    
+    display: flex;
+    flex-direction: column;
+
+
+    h1 {
+      font-weight: 500;
+      margin-bottom: 16px;
+    }
+
+    ul {
+        padding: 0;
+        display: inline;
+    }
+
+    li {
+      list-style: none;
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      margin: 24px 0;
+
+      .icon {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: #AA84FC;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 16px;
+      }
+    }
+  }
 
   section {
     background: #FFF;
@@ -21,44 +59,29 @@ const Container = styled.main`
   }
 `;
 
-const Form = styled.form`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  height: 100%;
-
-  h1 {
-    color: #8061FC;
-    font-weight: 500;
-  }
-
-  input {
-    height: 56px;
-    width: 72%;
-    margin: 32px 0;
-    padding-left: 16px;
-    border: 1px solid #8061FC;
-    border-radius: 8px;
-    outline: none;
-    color: #444444;
-
-    &::placeholder {
-      color: rgba(188, 188, 188, 1);
-    }
-  }
-`;
-
-
 export function Chat() {
-
+  const history = useHistory();
   const { user } = useContext(UserContext);
-  console.log(user);
+
+  const [activeUsers, setActiveUsers] = useState(['Giovanna', 'Leonardo']); // array of active users
+
+  if(!user) history.push('/');
 
   return (
-
     <Container>
-      oi chat
+      <aside>
+        <h1>Usuários ativos</h1>
+        <ul>
+          {activeUsers.map(user => {
+            return (
+              <li>
+                <div className="icon">{user[0]}</div>
+                {user}
+              </li>
+            )
+          })}
+        </ul>
+      </aside>
     </Container>
   )
 }
