@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import { UserContext } from '../hooks/UserContext';
 import SendMessageIcon from '../assets/send-message.svg';
 import socket from '../services/socket';
+import { v4 as uuidv4 } from 'uuid';
 
 const Container = styled.main`
   height: 100vh;
@@ -96,10 +97,12 @@ const Container = styled.main`
 `;
 
 export function Chat() {
-  const history = useHistory();
   const { user } = useContext(UserContext);
-  const [atualMessage, setAtualMessage] = useState('');
+  const history = useHistory();
 
+  const [atualMessage, setAtualMessage] = useState(''); // message sent now
+  const [messages, setMessages] = useState([]); // all messages
+  const [atualUser, setAtualUser] = useState(''); // atual user logged in
   const [activeUsers, setActiveUsers] = useState([]); // array of active users
 
   if(!user) history.push('/');
@@ -112,17 +115,38 @@ export function Chat() {
 
     const findUser = activeUsers.find(user => user.id === socket.id);
     console.log(findUser);
+    setAtualUser(findUser);
 
     /*return () => {
       socket.off('activeUsers');
     }*/
-  }, []);
+
+    socket.on('receivedMessages', allMessages => {
+      //setMessages([...messages, message]);
+      setMessages(allMessages);
+    });
+
+  }, [activeUsers]);
 
   function sendMessage(e) {
     e.preventDefault();
-    console.log(atualMessage);
 
-    socket.emit('sendMessage', atualMessage);
+    const message = {
+      messageId: uuidv4(),
+      userId: socket.id,
+      message: atualMessage
+    }
+    
+    setMessages([...messages, message]);
+
+    socket.emit('sendMessage', message);
+
+    setAtualMessage('');    
+  }
+
+  function getCurrentUser(id) {
+    const findUser = activeUsers.find(user => user.id === id);
+    return findUser;
   }
 
 
@@ -145,9 +169,16 @@ export function Chat() {
       </aside>
 
       <section>
-        <div className="messages"></div>
+        <div className="messages">
+          {messages.length !== 0 && messages.map(({messageId, userId, message}) => {
+            return atualUser.id === userId ? 
+              (<p key={messageId}>{atualUser.userName} - {message}</p>) 
+              : 
+              (<p key={messageId}>{getCurrentUser(userId).userName} - {message}</p>)
+          })}
+        </div>
         <form action="" onSubmit={sendMessage}>
-          <input type="text" name="message" placeholder="Digite aqui sua mensagem" onChange={(e) => setAtualMessage(e.target.value)} />
+          <input type="text" name="message" placeholder="Digite aqui sua mensagem" onChange={(e) => setAtualMessage(e.target.value)} value={atualMessage} />
           <button type="submit">
             <img src={SendMessageIcon} alt="Send Message" />
           </button>
