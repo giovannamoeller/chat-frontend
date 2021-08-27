@@ -1,14 +1,12 @@
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import styled from 'styled-components';
 import { UserContext } from '../hooks/UserContext';
 import SendMessageIcon from '../assets/send-message.svg';
+import socket from '../services/socket';
 
 const Container = styled.main`
-
   height: 100vh;
-
-
   aside {
     background: #8353E9;
     position: absolute;
@@ -16,11 +14,9 @@ const Container = styled.main`
     height: 100vh;
     color: #FFF;
     width: 18%;
-    
     display: flex;
     flex-direction: column;
     align-items: center;
-
 
     h1 {
       font-weight: 500;
@@ -28,8 +24,8 @@ const Container = styled.main`
     }
 
     ul {
-        padding: 0;
-        display: inline;
+      padding: 0;
+      display: inline;
     }
 
     li {
@@ -97,13 +93,27 @@ const Container = styled.main`
   }
 `;
 
+
 export function Chat() {
   const history = useHistory();
   const { user } = useContext(UserContext);
 
-  const [activeUsers, setActiveUsers] = useState(['Giovanna', 'Leonardo']); // array of active users
+  const [activeUsers, setActiveUsers] = useState([]); // array of active users
 
   if(!user) history.push('/');
+
+  useEffect(() => {
+
+    socket.on('activeUsers', users => {
+      console.log(users)
+      setActiveUsers(users);
+    });
+    
+    /*return () => {
+      socket.off('activeUsers');
+    }*/
+  }, []);
+
 
   return (
     <Container>
@@ -111,11 +121,11 @@ export function Chat() {
         <div>
           <h1>Usuários ativos</h1>
           <ul>
-            {activeUsers.map(user => {
+            {activeUsers.map(({id, userName}) => {
               return (
-                <li>
-                  <div className="icon">{user[0]}</div>
-                  {user}
+                <li key={id}>
+                  <div className="icon">{userName[0].toUpperCase()}</div>
+                  {userName}
                 </li>
               )
             })}
@@ -125,7 +135,6 @@ export function Chat() {
 
       <section>
         <div className="messages"></div>
-
         <form action="">
           <input type="text" name="message" placeholder="Digite aqui sua mensagem" />
           <button type="submit">

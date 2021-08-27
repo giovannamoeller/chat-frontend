@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { Button } from '../components/Button';
 import { useHistory } from 'react-router-dom';
 import { UserContext } from '../hooks/UserContext';
-
+import socket from '../services/socket';
 
 const Container = styled.main`
 
@@ -53,12 +53,11 @@ const Form = styled.form`
 export function LoginPage() {
 
   const { user, setUser } = useContext(UserContext);
-  
   const history = useHistory();
   
   function handleFormSubmit(e) {
     e.preventDefault();
-    console.log(user);
+    socket.emit('userActive', user);
     history.push('/chat');
   }
 
