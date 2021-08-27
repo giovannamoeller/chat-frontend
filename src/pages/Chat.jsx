@@ -16,16 +16,16 @@ const Container = styled.main`
     width: 18%;
     display: flex;
     flex-direction: column;
-    align-items: center;
-
+    flex-wrap: wrap;
+    
     h1 {
       font-weight: 500;
       margin: 3rem 0;
+      text-align: center;
     }
-
+    
     ul {
-      padding: 0;
-      display: inline;
+      padding-left: 1rem;
     }
 
     li {
@@ -33,17 +33,19 @@ const Container = styled.main`
       display: flex;
       align-items: center;
       margin: 24px 0;
-
+      font-size: 90%;
+      
       .icon {
-        width: 32px;
-        height: 32px;
+        width: 24px;
+        font-size: 80%;
+        height: 24px;
         border-radius: 50%;
         background: #AA84FC;
 
         display: flex;
         align-items: center;
         justify-content: center;
-        margin-right: 16px;
+        margin-right: 8px;
       }
     }
   }
@@ -93,10 +95,10 @@ const Container = styled.main`
   }
 `;
 
-
 export function Chat() {
   const history = useHistory();
   const { user } = useContext(UserContext);
+  const [atualMessage, setAtualMessage] = useState('');
 
   const [activeUsers, setActiveUsers] = useState([]); // array of active users
 
@@ -105,14 +107,23 @@ export function Chat() {
   useEffect(() => {
 
     socket.on('activeUsers', users => {
-      console.log(users)
       setActiveUsers(users);
     });
-    
+
+    const findUser = activeUsers.find(user => user.id === socket.id);
+    console.log(findUser);
+
     /*return () => {
       socket.off('activeUsers');
     }*/
   }, []);
+
+  function sendMessage(e) {
+    e.preventDefault();
+    console.log(atualMessage);
+
+    socket.emit('sendMessage', atualMessage);
+  }
 
 
   return (
@@ -135,8 +146,8 @@ export function Chat() {
 
       <section>
         <div className="messages"></div>
-        <form action="">
-          <input type="text" name="message" placeholder="Digite aqui sua mensagem" />
+        <form action="" onSubmit={sendMessage}>
+          <input type="text" name="message" placeholder="Digite aqui sua mensagem" onChange={(e) => setAtualMessage(e.target.value)} />
           <button type="submit">
             <img src={SendMessageIcon} alt="Send Message" />
           </button>
