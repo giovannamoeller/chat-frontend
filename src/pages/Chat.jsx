@@ -59,11 +59,42 @@ const Container = styled.main`
     align-items: center;
 
     .messages {
-      background: #efe9fa;
+      background: #F9F6FE;
       width: 90%;
       height: 80%;
       margin-top: 3rem;
       border-radius: 8px;
+      display: flex;
+      flex-direction: column;
+      padding: 2rem;
+      overflow: auto;
+
+      p {
+        margin: 0.5rem 0;
+        
+        font-size: 85%;
+        display: flex;
+        flex-direction: column;
+        
+        span {
+          &.msg {
+            color: #5e5e5e;
+            background: #FFF;
+            padding: 0.3rem 1rem;
+            border-radius: 4rem;
+            display: inline;
+            margin-top: 0.4rem;
+          }
+        }
+      }
+      
+      & .atualUser {
+        align-self: flex-end;
+      }
+      
+      & .otherUser {
+        align-self: flex-start;
+      }
     }
 
     form {
@@ -172,9 +203,13 @@ export function Chat() {
         <div className="messages">
           {messages.length !== 0 && messages.map(({messageId, userId, message}) => {
             return atualUser.id === userId ? 
-              (<p key={messageId}>{atualUser.userName} - {message}</p>) 
+              (
+                <p className="atualUser" key={messageId}><span>{atualUser.userName}</span><span class="msg">{message}</span></p>
+              ) 
               : 
-              (<p key={messageId}>{getCurrentUser(userId).userName} - {message}</p>)
+              (
+                <p className="otherUser" key={messageId}><span>{getCurrentUser(userId).userName}</span><span class="msg">{message}</span></p>
+              )
           })}
         </div>
         <form action="" onSubmit={sendMessage}>
